@@ -15,6 +15,7 @@ extern "C" {
 
 void Walsh_Ctor(Walsh *unit) {
   int32 maxindex = unit->mNumInputs;
+  // if num of inputs is not a power of two stop the program
   if(!ISPOWEROFTWO(maxindex)){
     Print("Walsh UGEN: The number of Inputs (%i) is not a power of Two\n", maxindex);
     return;
@@ -24,7 +25,8 @@ void Walsh_Ctor(Walsh *unit) {
   Walsh_next(unit,1);
 }
 
-float * process(float a[], size_t n) {
+// Fast Walsh-Hadamard Transform
+float * fwht(float a[], size_t n) {
   int endVal = n;
   int h = 1;
   while (h < endVal) {
@@ -50,18 +52,21 @@ void Walsh_next(Walsh* unit, int inNumSamples) {
   int n = unit->mNumInputs;
   out = OUT(0);
   float a[n];
+  // get saple value from each input e put it in array
   for (int ch = 0; ch < n; ch++) {
     in = IN(ch);
     a[ch] = *in;
   }
 
-  float *result = process(a, n);
+  float *result = fwht(a, n); // returns an array
 
+  // send the array to the output
   for(int i=0; i<inNumSamples; i++){
     out = &result[i];
   }
 }
 
+// not sure if it is needed
 void Walsh_Dtor(Walsh * unit) {}
 
 PluginLoad(WalshUgens) {
