@@ -6,12 +6,12 @@ static InterfaceTable *ft;
 
 struct Walsh : public Unit {};
 
-extern "C" {
-  static void load(InterfaceTable *inTable);
-  static void Walsh_Ctor(Walsh *unit);
-  static void Walsh_next(Walsh *unit, int inNumSamples);
-  static void Walsh_Dtor(Walsh *unit);
-}
+// extern "C" {
+//   static void load(InterfaceTable *inTable);
+//   static void Walsh_Ctor(Walsh *unit);
+//   static void Walsh_next(Walsh *unit, int inNumSamples);
+//   static void Walsh_Dtor(Walsh *unit);
+// }
 
 void Walsh_Ctor(Walsh *unit) {
   int32 maxindex = unit->mNumInputs;
@@ -26,11 +26,9 @@ void Walsh_Ctor(Walsh *unit) {
 }
 
 // Fast Walsh-Hadamard Transform
-float * fwht(float a[], size_t n) {
-  int endVal = n;
-  int h = 1;
-  while (h < endVal) {
-    for (int i = 0; i < endVal; i+=h*2) {
+void fwht(float *a, size_t n) {
+  for (int h=1; h < n; h *=2){
+    for (int i = 0; i < n; i+=h*2) {
       for (int j = i; j< i+h; j++) {
         float x = a[j];
         float y = a[j+h];
@@ -38,12 +36,10 @@ float * fwht(float a[], size_t n) {
         a[j+h] = x-y;
       }
     }
-    h *= 2;
   }
-  for (int val = 0; val < n; val++){
-    a[val] = a[val]*(1/pow(2,log2f(n)-1));
+  for (int i = 0; i < n; i++){
+    a[i] = a[i]*(1/pow(2,log2f(n)-1));
   }
-  return a;
 }
 
 void Walsh_next(Walsh* unit, int inNumSamples) {
