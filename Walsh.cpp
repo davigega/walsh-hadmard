@@ -45,23 +45,23 @@ void fwht(float *a, size_t n) {
 void Walsh_next(Walsh* unit, int inNumSamples) {
   int n = unit->mNumInputs;
   // float *out = OUT(0);
-  float a[n];
+  float arr[n]; //
   // out = in[i]
-    // get the first sample value from each input and put it in array
 
 
   // Block Size loop
-  for (int i = 0; i < inNumSamples; i++) { // i = 0
-    for (int ch = 0; ch < n; ch++) { // ch = 0
-      float *in = IN(ch); // *in = IN(0) --> [0 0 0 0 0 ]
-        a[ch] = in[i]; // array of i sample from channel [IN(0)[i],IN(1)[i],IN(2)[i],IN(3)[i]]
+  for (int i = 0; i < inNumSamples; i++) {
+    // get the i sample value from each input and put it in an array
+    for (int ch = 0; ch < n; ch++) {
+      float *in = IN(ch);
+        arr[ch] = in[i]; // array of n sample from channel [IN(0)[i],IN(1)[i],IN(2)[i]..IN(n)[i]]
     }
-    fwht(a, n);
+    fwht(arr, n);
 
     // send the array to the output
     for(int ch=0; ch<n; ch++){
       float *out = OUT(ch);
-      out[ch] = a[ch];
+      out[ch] = arr[ch];
     }
   }
 }
