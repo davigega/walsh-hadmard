@@ -7,10 +7,10 @@ static InterfaceTable *ft;
 struct Walsh : public Unit {};
 
 // extern "C" {
-//   static void load(InterfaceTable *inTable);
-//   static void Walsh_Ctor(Walsh *unit);
-//   static void Walsh_next(Walsh *unit, int inNumSamples);
-//   static void Walsh_Dtor(Walsh *unit);
+  // static void load(InterfaceTable *inTable);
+  static void Walsh_Ctor(Walsh *unit);
+  static void Walsh_next(Walsh *unit, int inNumSamples);
+  static void Walsh_Dtor(Walsh *unit);
 // }
 
 void Walsh_Ctor(Walsh *unit) {
@@ -43,22 +43,26 @@ void fwht(float *a, size_t n) {
 }
 
 void Walsh_next(Walsh* unit, int inNumSamples) {
-  float *in;
-  float *out;
   int n = unit->mNumInputs;
-  out = OUT(0);
+  // float *out = OUT(0);
   float a[n];
-  // get saple value from each input e put it in array
-  for (int ch = 0; ch < n; ch++) {
-    in = IN(ch);
-    a[ch] = *in;
-  }
+  // out = in[i]
+    // get the first sample value from each input and put it in array
 
-  float *result = fwht(a, n); // returns an array
 
-  // send the array to the output
-  for(int i=0; i<inNumSamples; i++){
-    out = &result[i];
+  // Block Size loop
+  for (int i = 0; i < inNumSamples; i++) { // i = 0
+    for (int ch = 0; ch < n; ch++) { // ch = 0
+      float *in = IN(ch); // *in = IN(0) --> [0 0 0 0 0 ]
+        a[ch] = in[i]; // array of i sample from channel [IN(0)[i],IN(1)[i],IN(2)[i],IN(3)[i]]
+    }
+    fwht(a, n);
+
+    // send the array to the output
+    for(int ch=0; ch<n; ch++){
+      float *out = OUT(ch);
+      out[ch] = a[ch];
+    }
   }
 }
 
