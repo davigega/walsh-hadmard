@@ -61,7 +61,7 @@ void Walsh_next(Walsh* unit, int inNumSamples) {
     // send the array to the output
     for(int ch=0; ch<n; ch++){
       float *out = OUT(ch);
-      out[ch] = arr[ch];
+      out[i] = arr[ch];
     }
   }
 }
