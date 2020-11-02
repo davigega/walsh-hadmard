@@ -14,13 +14,6 @@ struct Walsh : public Unit {};
 // }
 
 void Walsh_Ctor(Walsh *unit) {
-  int32 maxindex = unit->mNumInputs;
-  // if num of inputs is not a power of two stop the program
-  if(!ISPOWEROFTWO(maxindex)){
-    Print("Walsh UGEN: The number of Inputs (%i) is not a power of Two\n", maxindex);
-    return;
-  }
-
   SETCALC(Walsh_next);
   Walsh_next(unit,1);
 }
@@ -44,9 +37,7 @@ void fwht(float *a, size_t n) {
 
 void Walsh_next(Walsh* unit, int inNumSamples) {
   int n = unit->mNumInputs;
-  // float *out = OUT(0);
-  float arr[n]; //
-  // out = in[i]
+  float arr[n];
 
 
   // Block Size loop
@@ -57,8 +48,7 @@ void Walsh_next(Walsh* unit, int inNumSamples) {
         arr[ch] = in[i]; // array of n sample from channel [IN(0)[i],IN(1)[i],IN(2)[i]..IN(n)[i]]
     }
     fwht(arr, n);
-
-    // send the array to the output
+    // route array to the output
     for(int ch=0; ch<n; ch++){
       float *out = OUT(ch);
       out[i] = arr[ch];
