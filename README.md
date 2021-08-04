@@ -1,2 +1,2 @@
 # A Walsh-Hadmard Transform UGen
-It implements the Fast Walsh-Hadmard Transform to use it in FDN
+It implements the Fast Walsh-Hadmard Transform to be used in FDN
